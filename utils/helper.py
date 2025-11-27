@@ -18,14 +18,17 @@ def count_tokens(pipeline, query, config=None):
         if config is None:
             config = {"configurable": {"session_id": "default"}}
 
+        # Explicitly pass the callback to LangChain
+        if "callbacks" not in config:
+            config["callbacks"] = [cb]
+        elif isinstance(config["callbacks"], list):
+            config["callbacks"].append(cb)
+        else:
+            config["callbacks"] = [config["callbacks"], cb]
+
         result = pipeline.invoke(query, config=config)
-        print(f'Spent a total of {cb.total_tokens} tokens')
+        usage = cb.get_total_usage()
+        print(f"Spent a total of {usage['total_tokens_used']} tokens "
+              f"(prompt: {usage['total_prompt_tokens']}, completion: {usage['total_completion_tokens']})")
 
     return result
-
-
-def get_chat_history(session_id: str, chat_map: dict ={}) -> InMemoryChatMessageHistory:
-    if session_id not in chat_map:
-        # if session ID doesn't exist, create a new chat history
-        chat_map[session_id] = InMemoryChatMessageHistory()
-    return chat_map[session_id]
