@@ -43,33 +43,19 @@ class GeminiCallbackHandler(BaseCallbackHandler):
         pass
 
     def on_llm_end(self, response: LLMResult, **kwargs: Any) -> None:
-        """Collect Gemini token usage."""
-        self.successful_requests += 1
-
-        # In Gemini, token usage is stored in response.generations[0][0].generation_info
-        # BUT LangChain normalizes it to response.llm_output["usage_metadata"]
-        usage = None
-
-        if response.llm_output:
-            usage = response.llm_output.get("usage_metadata")
-
-        if not usage:
+        """Collect token usage."""
+        if response.llm_output is None:
             return None
+        self.successful_requests += 1
+        if "token_usage" not in response.llm_output:
+            return None
+        token_usage = response.llm_output["token_usage"]
+        completion_tokens = token_usage.get("completion_tokens", 0)
+        prompt_tokens = token_usage.get("prompt_tokens", 0)
+        self.total_tokens += token_usage.get("total_tokens", 0)
+        self.prompt_tokens += prompt_tokens
+        self.completion_tokens += completion_tokens
 
-        # Gemini fields:
-        # - prompt_token_count
-        # - candidates_token_count
-        # - total_token_count
-        prompt_toks = usage.get("prompt_token_count", 0)
-        completion_toks = usage.get("candidates_token_count", 0)
-        total_toks = usage.get("total_token_count", prompt_toks + completion_toks)
-
-        self.prompt_tokens += prompt_toks
-        self.completion_tokens += completion_toks
-        self.total_tokens += total_toks
-
-        # (Optional) cost tracking — fill later if needed
-        # self.total_cost += compute_gemini_cost(model_name, prompt_toks, completion_toks)
 
     def __copy__(self):
         return self
