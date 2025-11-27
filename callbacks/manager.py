@@ -5,11 +5,11 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-PROJECT_ROOT = Path(__file__).resolve().parents[4]
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
     
-from gemini_info import GeminiCallbackHandler
+from callbacks.gemini_info import GeminiCallbackHandler
 from contextlib import contextmanager
 from contextvars import ContextVar
 
