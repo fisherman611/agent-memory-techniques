@@ -491,4 +491,4 @@ with gr.Blocks(title="AI Chatbot with Multiple Memory Techniques") as demo:
     )
 
 if __name__ == "__main__":
-    demo.launch(share=False, css=custom_css)
+    demo.launch(share=False, theme=gr.themes.Default(), css=custom_css)
