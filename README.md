@@ -1,3 +1,17 @@
+---
+title: Agent Memory Techniques
+emoji: 🤖
+colorFrom: green
+colorTo: blue
+sdk: gradio
+sdk_version: 5.25.2
+app_file: app.py
+pinned: false
+hf_oauth: true
+# optional, default duration is 8 hours/480 minutes. Max duration is 30 days/43200 minutes.
+hf_oauth_expiration_minutes: 480
+---
+
 # **AI Agent Chatbot with Multiple Memory Techniques**
 
 An advanced AI chatbot project that implements and compares different conversation-memory strategies. The goal is to maintain long-term context while optimizing cost, speed, and response quality.
